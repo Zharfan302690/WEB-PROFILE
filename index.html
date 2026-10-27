@@ -33,8 +33,7 @@
     background: var(--page-bg);
     color: var(--ink);
     font-family: var(--body);
-    display: grid;
-    place-items: center;
+    display: flex; flex-direction: column; align-items: center;
     min-height: 100vh;
     padding-block: 16px;
     padding-left: max(16px, env(safe-area-inset-left, 0px));
@@ -42,6 +41,7 @@
     overflow-x: hidden;
   }
 
+  .fold { width: 100%; min-height: calc(100vh - 32px); display: grid; place-items: center; }
   .hero {
     position: relative;
     width: min(100%, calc((100vh - 32px) * 1432 / 811));
@@ -255,8 +255,52 @@
     .turntable { position: relative; left: auto; top: auto; width: 80%; margin-left: 20%; margin-top: 21%; }
   }
 
+  /* ---------- info panel: only exists while a disc is playing ---------- */
+  .info {
+    --w: min(100%, calc((100vh - 32px) * 1432 / 811));
+    width: var(--w); container-type: inline-size;
+    display: grid; grid-template-rows: 0fr; opacity: 0;
+    transition: grid-template-rows .8s cubic-bezier(.2,.7,.2,1), opacity .6s ease;
+  }
+  .info.show { grid-template-rows: 1fr; opacity: 1; }
+  .info-clip { min-height: 0; overflow: hidden; }
+  .info-pane { display: none; padding: 5cqw 6.2cqw 7cqw; border-top: .25cqw solid var(--ink); font-size: clamp(15px, 1.25cqw, 21px); line-height: 1.55; }
+  .info-pane.on { display: block; animation: infoIn .8s .15s both cubic-bezier(.2,.7,.2,1); }
+  @keyframes infoIn { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+  .info-kicker { font-family: var(--display); font-size: clamp(13px, 1.1cqw, 18px); letter-spacing: .14em; text-transform: uppercase; color: var(--red); }
+  .info-title { font-family: var(--display); font-weight: 400; font-size: clamp(40px, 6.2cqw, 96px); line-height: 1; margin: .5cqw 0 3cqw; }
+  .info-title em { color: var(--red); font-style: italic; }
+  .lead { font-size: clamp(18px, 1.9cqw, 30px); line-height: 1.5; max-width: 52ch; }
+  .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 2.4cqw 3cqw; margin-top: 4cqw; }
+  .fact { border-top: 2px solid var(--ink); padding-top: .9cqw; }
+  .fact dt { font-family: var(--display); font-size: clamp(12px, 1cqw, 16px); letter-spacing: .14em; text-transform: uppercase; color: var(--red); margin-bottom: .4cqw; }
+  .fact dd { font-weight: 400; }
+  .fact dd small { display: block; opacity: .65; font-size: .88em; }
+  .chips { display: flex; flex-wrap: wrap; gap: .6cqw; list-style: none; }
+  .chips li { border: 1.5px solid var(--ink); border-radius: 999px; padding: .15em .85em; font-size: .92em; white-space: nowrap; }
+  .chips.soft li { border-color: transparent; background: var(--amber); }
+  .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 4cqw 5cqw; }
+  .block h3 { font-family: var(--display); font-weight: 400; font-size: clamp(22px, 2.4cqw, 38px); margin-bottom: 1.2cqw; }
+  .block h3 span { color: var(--red); }
+  .level-row { display: flex; justify-content: space-between; align-items: center; gap: 1cqw; padding: .55cqw 0; border-bottom: 1px solid rgba(11,11,11,.18); }
+  .dots { display: inline-flex; gap: 5px; margin-left: auto; }
+  .dots i { width: .8em; height: .8em; border-radius: 50%; border: 1.5px solid var(--ink); }
+  .dots i.f { background: var(--red); border-color: var(--red); }
+  .level-row b { font-weight: 400; min-width: 6.5em; text-align: right; opacity: .65; font-size: .88em; }
+  .edu { border-left: .35cqw solid var(--red); padding-left: 1.6cqw; }
+  .edu strong { display: block; font-size: 1.15em; font-weight: 400; }
+  .projects { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr)); gap: 2.4cqw; counter-reset: p; }
+  .projects > li { counter-increment: p; border: 2px solid var(--ink); border-radius: 1.2cqw; padding: 2cqw 2.2cqw 2.2cqw; display: flex; flex-direction: column; gap: 1cqw; background: #fff; box-shadow: .5cqw .5cqw 0 var(--amber); }
+  .projects > li::before { content: "0" counter(p); font-family: var(--display); font-size: clamp(28px, 3.4cqw, 52px); color: var(--red); line-height: 1; }
+  .projects h3 { font-family: var(--display); font-weight: 400; font-size: clamp(22px, 2.3cqw, 36px); line-height: 1.1; }
+  .projects p { flex: 1; }
+  .projects a { align-self: flex-start; color: var(--ink); font-weight: 400; text-decoration: none; border-bottom: 2px solid var(--red); padding-bottom: 1px; overflow-wrap: anywhere; }
+  .projects a:hover, .projects a:focus-visible { color: var(--red); }
+  @media (prefers-reduced-motion: reduce) { .info, .info-pane.on { transition: none; animation: none; } }
+
 </style>
 
+<div class="fold">
 <main class="hero" id="hero">
   <section class="intro">
     <h1>Hi, im Zharfan</h1>
@@ -317,6 +361,78 @@
     <img class="tonearm-holder" src="assets/tonearm-holder.png" alt="">
   </div>
 </main>
+</div>
+
+<section class="info" id="info" aria-live="polite">
+  <div class="info-clip">
+
+    <article class="info-pane" data-disc="about" aria-label="About">
+      <p class="info-kicker">Now playing &middot; About</p>
+      <h2 class="info-title">About <em>me</em></h2>
+      <p class="lead">Computer Science student specializing in Internet of Things (IoT) at BINUS University Bandung with a strong interest in hardware engineering and embedded systems. Experienced in microcontroller programming, RFID systems, and barcode scanner integration using Arduino-based platforms. Passionate about building practical IoT solutions and continuously developing skills in embedded systems and hardware integration.</p>
+      <dl class="facts">
+        <div class="fact"><dt>Location</dt><dd>Bandung, West Java, Indonesia</dd></div>
+        <div class="fact"><dt>Studying</dt><dd>BINUS University Bandung<small>Bachelor of Computer Science (IoT) &middot; expected 2028</small></dd></div>
+        <div class="fact"><dt>Currently</dt><dd>5th semester<small>IPK 3.31</small></dd></div>
+        <div class="fact"><dt>Languages</dt><dd>Indonesian &mdash; Native<small>English &mdash; Intermediate</small></dd></div>
+        <div class="fact"><dt>Contact</dt><dd><a href="mailto:zharfan.agustiansyah01@gmail.com" style="color:inherit">zharfan.agustiansyah01@gmail.com</a></dd></div>
+      </dl>
+      <div class="fact" style="margin-top:4cqw"><dt>Soft skills</dt>
+        <dd><ul class="chips soft"><li>Problem Solving</li><li>Analytical Thinking</li><li>Team Collaboration</li><li>Fast Learner</li><li>Adaptability</li></ul></dd></div>
+    </article>
+
+    <article class="info-pane" data-disc="resume" aria-label="Resume">
+      <p class="info-kicker">Now playing &middot; Resume</p>
+      <h2 class="info-title">The <em>resume</em></h2>
+      <div class="cols">
+        <div class="block">
+          <h3><span>/</span> Education</h3>
+          <div class="edu"><strong>BINUS University &ndash; Bandung, Indonesia</strong>Bachelor of Computer Science (Internet of Things)<br>Expected graduation: 2028<br>Currently 5th semester &middot; IPK 3.31</div>
+          <h3 style="margin-top:3cqw"><span>/</span> Languages</h3>
+          <div class="level-row"><span>Indonesian</span><span class="dots"><i class="f"></i><i class="f"></i><i class="f"></i></span><b>Native</b></div>
+          <div class="level-row"><span>English</span><span class="dots"><i class="f"></i><i class="f"></i><i></i></span><b>Intermediate</b></div>
+        </div>
+        <div class="block">
+          <h3><span>/</span> Programming</h3>
+          <div class="level-row"><span>C</span><span class="dots"><i class="f"></i><i class="f"></i><i></i></span><b>Intermediate</b></div>
+          <div class="level-row"><span>C++</span><span class="dots"><i class="f"></i><i class="f"></i><i></i></span><b>Intermediate</b></div>
+          <div class="level-row"><span>Python</span><span class="dots"><i class="f"></i><i class="f"></i><i></i></span><b>Intermediate</b></div>
+          <div class="level-row"><span>Java</span><span class="dots"><i class="f"></i><i></i><i></i></span><b>Beginner</b></div>
+          <div class="level-row"><span>SQL</span><span class="dots"><i class="f"></i><i></i><i></i></span><b>Beginner</b></div>
+          <div class="level-row"><span>HTML</span><span class="dots"><i class="f"></i><i></i><i></i></span><b>Beginner</b></div>
+        </div>
+        <div class="block">
+          <h3><span>/</span> IoT &amp; Hardware</h3>
+          <ul class="chips"><li>Arduino Development</li><li>Microcontroller Programming</li><li>RFID Integration</li><li>Barcode Scanner Integration</li><li>Embedded Systems Basics</li></ul>
+          <h3 style="margin-top:3cqw"><span>/</span> Tools</h3>
+          <ul class="chips"><li>Arduino IDE</li><li>Visual Studio Code</li><li>XAMPP</li><li>MySQL</li><li>Git / GitHub (Basic)</li></ul>
+        </div>
+      </div>
+    </article>
+
+    <article class="info-pane" data-disc="projects" aria-label="Projects">
+      <p class="info-kicker">Now playing &middot; Projects</p>
+      <h2 class="info-title">Things I&rsquo;ve <em>built</em></h2>
+      <ul class="projects">
+        <li><h3>RFID Library Borrowing System</h3>
+          <p>A system where users borrow books by scanning a book barcode and authenticating with an RFID card. Microcontroller logic using Arduino, an RFID scanner, and barcode scanner integration.</p>
+          <ul class="chips"><li>Arduino</li><li>RFID</li><li>Barcode scanner</li></ul></li>
+        <li><h3>LAN Service Provider Database System</h3>
+          <p>A MySQL database designed and implemented with XAMPP to manage customer and service data for a LAN service provider.</p>
+          <ul class="chips"><li>MySQL</li><li>XAMPP</li></ul></li>
+        <li><h3>AI-based E-commerce Item Search</h3>
+          <p>An e-commerce application, in development, that uses AI to improve item search efficiency and product discovery.</p>
+          <ul class="chips"><li>Python</li><li>Java</li><li>AI</li></ul>
+          <a href="https://github.com/Zharfan302690/MobilePrograming_Kelik" target="_blank" rel="noopener">github.com/Zharfan302690/MobilePrograming_Kelik</a></li>
+        <li><h3>ItsLemon Landing Page</h3>
+          <p>The landing page for the small business ItsLemon, built with HTML for the site and Supabase for the database.</p>
+          <ul class="chips"><li>HTML</li><li>Supabase</li></ul>
+          <a href="https://itslemon.vercel.app" target="_blank" rel="noopener">itslemon.vercel.app</a></li>
+      </ul>
+    </article>
+
+  </div>
+</section>
 
 <script>
 (() => {
@@ -667,10 +783,23 @@
     if (deck.busy && deck.phase === 'settle' && S.omega === 0 && Math.abs(S.armAngle - REST_ANGLE) < 0.4) swapDiscs();
     Object.values(discs).forEach(d => stepDisc(d, dt));
 
+    syncInfo();
     drawScreen(dt);
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
+
+  /* ---------- info panel: visible only while a disc is actually playing ---------- */
+  const infoEl = document.getElementById('info');
+  const panes = Array.from(infoEl.querySelectorAll('.info-pane'));
+  let shownDisc = null;
+  function syncInfo() {
+    const id = (S.src && deck.loaded && !deck.busy) ? deck.loaded : null;
+    if (id === shownDisc) return;
+    shownDisc = id;
+    panes.forEach(p => p.classList.toggle('on', p.dataset.disc === id));
+    infoEl.classList.toggle('show', !!id);
+  }
 })();
 </script>
 
