@@ -88,7 +88,7 @@
     font-size: calc(96 * var(--u)); line-height: 1; color: #1b1b1b; white-space: nowrap;
     transform: scaleX(1.003); transform-origin: 0 0;
   }
-  .logo-disc { left: 29.3493%; top: 4.1943%; width: 6.3745%; }
+  .logo-disc { left: 29.3493%; top: 4.1943%; width: 6.3745%; filter: drop-shadow(0 calc(16 * var(--u)) calc(6 * var(--u)) rgba(0,0,0,.4)); }
 
   /* screen: frame + black glass; the visualizer canvas sits on the glass */
   .screen-frame {
@@ -118,7 +118,65 @@
   .cap-label.vol   { left: 5.5777%; top: 84.3267%; }
   .cap-label.speed { left: 15.4714%; top: 84.3267%; }
 
-  .red-dial  { left: 27.8884%; top: 71.7439%; width: 5.3121%; }
+  /* red light from the dial's indicator (at about 487, 678): a small glow at the source plus a flashlight-style beam that
+     points one way (--beam-angle, in degrees, 0 = to the right, negative = up) and fades with distance */
+  .red-glow {
+    left: 28.3533%; top: 68.2119%; width: 7.9681%; aspect-ratio: 1; z-index: 1;
+    background: radial-gradient(circle at 50% 50%, rgba(255,238,234,.9) 0%, rgba(255,70,60,.6) 16%, rgba(255,32,28,.24) 40%, rgba(255,32,28,0) 70%);
+  }
+  .red-beam {
+    --beam-angle: -15deg;          /* 0 = to the right, negative = up */
+    --beam-start: 34;              /* width of the light where it leaves the dial, in artwork px (the red arc is about 33 tall) */
+    left: 32.3373%; top: 57.1744%; width: 21.2483%; height: 35.3201%; z-index: 3;
+    transform-origin: 0 50%; transform: rotate(var(--beam-angle));
+    filter: blur(calc(7 * var(--u)));
+    -webkit-mask-image: radial-gradient(circle calc(210 * var(--u)) at 0 50%, #000 10%, rgba(0,0,0,.5) 55%, transparent 100%);
+            mask-image: radial-gradient(circle calc(210 * var(--u)) at 0 50%, #000 10%, rgba(0,0,0,.5) 55%, transparent 100%);
+  }
+  .red-beam i {
+    position: absolute; inset: 0; display: block;
+    clip-path: polygon(0 calc(50% - var(--beam-start) / 2 * var(--u)), 100% 0, 100% 100%, 0 calc(50% + var(--beam-start) / 2 * var(--u)));
+    background:
+      radial-gradient(ellipse 30% 15% at 0 50%, rgba(255,238,234,.8) 0%, rgba(255,238,234,.32) 45%, rgba(255,238,234,0) 100%),   /* brighter, white-ish core */
+      linear-gradient(to right, rgba(255,32,28,.66) 0%, rgba(255,32,28,.36) 35%, rgba(255,32,28,0) 100%);
+  }
+
+  /* small blue light. The bright spot of the lamp is at about (1058.2, 804.9); glow and beam both start exactly there. */
+  .small-light { z-index: 2; rotate: -10deg; left: 68.8911%; top: 86.7550%; width: 3.3201%;
+    filter: drop-shadow(0 calc(8 * var(--u)) calc(6 * var(--u)) rgba(0,0,0,.4)); }
+  .light-glow {
+    left: 67.6096%; top: 84.4260%; width: 5.3121%; aspect-ratio: 1; z-index: 1;
+    background: radial-gradient(circle at 50% 50%, rgba(236,252,255,.95) 0%, rgba(150,238,255,.62) 16%, rgba(128,234,253,.24) 40%, rgba(128,234,253,0) 70%);
+  }
+  .light-beam {
+    --beam-angle: -125deg;          /* 0 = to the right, negative = up */
+    --beam-start: 1;                /* width of the light where it leaves the lamp, in artwork px */
+    left: 70.4648%; top: 71.1810%; width: 53.1208%; height: 35.3201%; z-index: 3;
+    transform-origin: 0 50%; transform: rotate(var(--beam-angle));
+    filter: blur(calc(2 * var(--u)));
+    -webkit-mask-image: radial-gradient(circle calc(310 * var(--u)) at 0 50%, #000 10%, rgba(0,0,0,.5) 55%, transparent 100%);
+            mask-image: radial-gradient(circle calc(310 * var(--u)) at 0 50%, #000 10%, rgba(0,0,0,.5) 55%, transparent 100%);
+  }
+  .light-beam i {
+    position: absolute; inset: 0; display: block;
+    clip-path: polygon(0 calc(50% - var(--beam-start) / 2 * var(--u)), 100% 0, 100% 100%, 0 calc(50% + var(--beam-start) / 2 * var(--u)));
+    background: linear-gradient(to right, rgba(128,234,253,.72) 0%, rgba(128,234,253,.42) 35%, rgba(128,234,253,0) 100%);   /* blue bloom */
+  }
+  /* white column: the main source of the light. Narrow at the lamp, widening like the cone, bright until near the end, then fades */
+  .light-core {
+    --beam-angle: -125deg;          /* keep equal to .light-beam */
+    left: 70.4648%; top: 87.1854%; width: 19.9203%; height: 3.3113%; z-index: 3;
+    transform-origin: 0 50%; transform: rotate(var(--beam-angle));
+    filter: blur(calc(3.2 * var(--u)));
+    -webkit-mask-image: linear-gradient(to right, #000 0%, #000 78%, transparent 100%);
+            mask-image: linear-gradient(to right, #000 0%, #000 78%, transparent 100%);
+  }
+  .light-core i {
+    position: absolute; inset: 0; display: block;
+    clip-path: polygon(0 calc(50% - 1.5 * var(--u)), 100% calc(50% - 13 * var(--u)), 100% calc(50% + 13 * var(--u)), 0 calc(50% + 1.5 * var(--u)));
+    background: linear-gradient(to right, rgba(255,255,255,.38) 0%, rgba(245,254,255,.33) 100%);
+  }
+  .red-dial  { z-index: 2; left: 27.8884%; top: 71.7439%; width: 5.3121%; filter: drop-shadow(0 calc(8 * var(--u)) calc(6 * var(--u)) rgba(0,0,0,.4)); }
   .start-img { left: 28.1541%; top: 82.7815%; width: 7.1713%; }
   .credit {
     left: 35.7238%; top: 90.0662%;
@@ -136,6 +194,10 @@
   .tonearm-base { left: 77.6228%; top: 8.1678%; width: 19.8539%; }
 
   /* platter */
+  .platter-shadow {
+    left: 28.9509%; top: 3.3113%; width: 53.2537%; aspect-ratio: 802 / 806; z-index: 1; border-radius: 50%;
+    box-shadow: 0 calc(8 * var(--u)) calc(6 * var(--u)) rgba(0,0,0,.4);
+  }
   .platter { left: 28.9509%; top: 3.3113%; width: 53.2537%; z-index: 1; will-change: transform; }
 
   /* sliders: whole track is the hit area, cap snaps to the printed markers */
@@ -146,7 +208,7 @@
   .slider.vol   { left: 5.1793%; }
   .slider.speed { left: 15.9363%; }
   .slider.drag  { cursor: grabbing; }
-  .slider .cap { position: absolute; left: 3.5714%; width: 82.1429%; transition: top .09s ease-out; }
+  .slider .cap { position: absolute; left: 3.5714%; width: 82.1429%; transition: top .09s ease-out; filter: drop-shadow(0 calc(8 * var(--u)) calc(6 * var(--u)) rgba(0,0,0,.4)); }
   .slider:focus-visible, .startstop:focus-visible, .disc:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
 
   .startstop {
@@ -170,10 +232,14 @@
   .disc.on  { z-index: 2; pointer-events: none; }
 
   /* tonearm: rotates around its white dot */
+  .arm-wrap {
+    left: 83.2065%; top: 7.1236%; width: 9.5618%; z-index: 3;
+    filter: drop-shadow(0 calc(32 * var(--u)) calc(6 * var(--u)) rgba(0,0,0,.4));   /* wrapper does not rotate, so the shadow always falls straight down */
+  }
   .tonearm-arm {
-    left: 83.2065%; top: 7.1236%; width: 9.5618%;
+    width: 100%;
     transform-origin: 59.5833% 20.4375%; transform: rotate(5deg);
-    will-change: transform; z-index: 3;
+    will-change: transform;
   }
   /* holder never moves; its white dot sits on the arm pivot */
   .tonearm-holder { left: 83.1766%; top: 17.1126%; width: 7.0385%; z-index: 4; }
@@ -213,16 +279,23 @@
 
     <span class="lbl vol m0">100%</span><span class="lbl vol m1">75%</span><span class="lbl vol m2">50%</span>
     <span class="lbl vol m3">25%</span><span class="lbl vol m4">0%</span>
-    <span class="lbl speed m0">2</span><span class="lbl speed m1">1.5</span><span class="lbl speed m2">1</span>
+    <span class="lbl speed m0">1.5</span><span class="lbl speed m1">1.25</span><span class="lbl speed m2">1</span>
     <span class="lbl speed m3">0.75</span><span class="lbl speed m4">0.5</span>
     <span class="lbl cap-label vol">VOL</span><span class="lbl cap-label speed">SPEED</span>
 
+    <div class="red-beam"><i></i></div>
+    <div class="light-beam"><i></i></div>
+    <div class="light-core"><i></i></div>
+    <div class="red-glow"></div>
+    <div class="light-glow"></div>
     <img class="red-dial" src="assets/red-light-dial.png" alt="">
+    <img class="small-light" src="assets/small-light.png" alt="">
     <img class="start-img" src="assets/start-stop.png" alt="">
     <span class="credit">Assets made by hand</span>
     <span class="reference">Reference:<br>Technics SL-1200M7L</span>
     <img class="tonearm-base" src="assets/tonearm-base.png" alt="">
 
+    <div class="platter-shadow"></div>
     <img class="platter" id="platter" src="assets/platter.png" alt="">
 
     <button class="disc slot" id="disc-about" type="button" data-disc="about" aria-label="ABOUT disc: load onto the turntable"><img class="face" src="assets/disc-about.png" alt=""></button>
@@ -234,13 +307,13 @@
       <img class="cap" src="assets/slider-switch.png" alt="">
     </div>
     <div class="slider speed" id="speed" role="slider" tabindex="0" aria-label="Speed"
-         aria-valuemin="0.5" aria-valuemax="2" aria-valuenow="1" aria-valuetext="1x">
+         aria-valuemin="0.5" aria-valuemax="1.5" aria-valuenow="1" aria-valuetext="1x">
       <img class="cap" src="assets/slider-switch.png" alt="">
     </div>
 
     <button class="startstop" id="startStop" type="button" aria-pressed="false" aria-label="Start or stop"></button>
 
-    <img class="tonearm-arm" id="arm" src="assets/tonearm-arm.png" alt="">
+    <div class="arm-wrap"><img class="tonearm-arm" id="arm" src="assets/tonearm-arm.png" alt=""></div>
     <img class="tonearm-holder" src="assets/tonearm-holder.png" alt="">
   </div>
 </main>
@@ -258,8 +331,8 @@
   ];
   /* which songs each disc plays, in order (indexes into TRACKS) */
   const PLAYLISTS = { about: [0, 1], projects: [2], resume: [3] };
-  const STD_SPEED = 200;                       // deg/s = 33 1/3 rpm
-  const SPEEDS = [2, 1.5, 1, 0.75, 0.5];
+  const STD_SPEED = 150;                       // deg/s at 1x (was 200); every speed scales from this, audio rate stays omega/STD_SPEED
+  const SPEEDS = [1.5, 1.25, 1, 0.75, 0.5];
   const VOLS   = [1, 0.75, 0.5, 0.25, 0];
   const MARK_Y0 = 479.5, MARK_STEP = 64;
   const SLIDER_TOP = 452, SLIDER_H = 316, CAP_H = 52;
