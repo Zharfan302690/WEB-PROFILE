@@ -277,43 +277,50 @@
     --w: min(100%, calc((100vh - 32px) * 1432 / 811));
     width: var(--w); container-type: inline-size;
     display: grid; grid-template-rows: 0fr; opacity: 0;
+    background: var(--pbg); color: var(--pink);
+    box-shadow: 0 0 0 100vmax var(--pbg); clip-path: inset(0 -100vmax);   /* colour runs edge to edge */
     transition: grid-template-rows .8s cubic-bezier(.2,.7,.2,1), opacity .6s ease;
   }
+  /* one colour scheme per disc */
+  .info { --pbg: #0f0f11; --pink: #f4efe9; --pacc: #ee1d37; --pacc2: #ee1d37; }                       /* default = ABOUT: Persona red and black */
+  .info[data-theme="about"]    { --pbg: #0f0f11; --pink: #f4efe9; --pacc: #ee1d37; --pacc2: #ee1d37; }
+  .info[data-theme="resume"]   { --pbg: #06233b; --pink: #e8f5ff; --pacc: #3fd3ff; --pacc2: #3fd3ff; }  /* blue disc: navy and cyan */
+  .info[data-theme="projects"] { --pbg: #180d1b; --pink: #f7e8f0; --pacc: #ff4d94; --pacc2: #f0d6b8; }  /* Bayonetta disc: black, hot pink, cream */
   .info.show { grid-template-rows: 1fr; opacity: 1; }
   .info-clip { min-height: 0; overflow: hidden; }
   .info-pane { display: none; padding: 5cqw 6.2cqw 7cqw; font-size: clamp(15px, 1.25cqw, 21px); line-height: 1.55; }
   .info-pane.on { display: block; animation: infoIn .8s .15s both cubic-bezier(.2,.7,.2,1); }
   @keyframes infoIn { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
-  .info-kicker { font-family: var(--display); font-size: clamp(13px, 1.1cqw, 18px); letter-spacing: .14em; text-transform: uppercase; color: var(--red); }
+  .info-kicker { font-family: var(--display); font-size: clamp(13px, 1.1cqw, 18px); letter-spacing: .14em; text-transform: uppercase; color: var(--pacc); }
   .info-title { font-family: var(--display); font-weight: 400; font-size: clamp(40px, 6.2cqw, 96px); line-height: 1; margin: .5cqw 0 3cqw; }
-  .info-title em { color: var(--red); font-style: italic; }
+  .info-title em { color: var(--pacc); font-style: italic; }
   .lead { font-size: clamp(18px, 1.9cqw, 12px); line-height: 1.5; max-width: 60ch; }
   .lead + .lead { margin-top: .9em; }
   .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 2.4cqw 3cqw; margin-top: 4cqw; }
-  .fact { border-top: 2px solid var(--ink); padding-top: .9cqw; }
-  .fact dt { font-family: var(--display); font-size: clamp(12px, 1cqw, 16px); letter-spacing: .14em; text-transform: uppercase; color: var(--red); margin-bottom: .4cqw; }
+  .fact { border-top: 2px solid var(--pink); padding-top: .9cqw; }
+  .fact dt { font-family: var(--display); font-size: clamp(12px, 1cqw, 16px); letter-spacing: .14em; text-transform: uppercase; color: var(--pacc); margin-bottom: .4cqw; }
   .fact dd { font-weight: 400; }
   .fact dd small { display: block; opacity: .65; font-size: .88em; }
   .chips { display: flex; flex-wrap: wrap; gap: .6cqw; list-style: none; }
-  .chips li { border: 1.5px solid var(--ink); border-radius: 999px; padding: .15em .85em; font-size: .92em; white-space: nowrap; }
-  .chips.soft li { border-color: transparent; background: var(--amber); }
+  .chips li { border: 1.5px solid var(--pink); border-radius: 999px; padding: .15em .85em; font-size: .92em; white-space: nowrap; }
+  .chips.soft li { border-color: transparent; background: var(--pacc2); color: var(--pbg); }
   .cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 4cqw 5cqw; }
   .block h3 { font-family: var(--display); font-weight: 400; font-size: clamp(22px, 2.4cqw, 38px); margin-bottom: 1.2cqw; }
-  .block h3 span { color: var(--red); }
-  .level-row { display: flex; justify-content: space-between; align-items: center; gap: 1cqw; padding: .55cqw 0; border-bottom: 1px solid rgba(11,11,11,.18); }
+  .block h3 span { color: var(--pacc); }
+  .level-row { display: flex; justify-content: space-between; align-items: center; gap: 1cqw; padding: .55cqw 0; border-bottom: 1px solid rgba(255,255,255,.18); }
   .dots { display: inline-flex; gap: 5px; margin-left: auto; }
-  .dots i { width: .8em; height: .8em; border-radius: 50%; border: 1.5px solid var(--ink); }
-  .dots i.f { background: var(--red); border-color: var(--red); }
+  .dots i { width: .8em; height: .8em; border-radius: 50%; border: 1.5px solid var(--pink); }
+  .dots i.f { background: var(--pacc); border-color: var(--pacc); }
   .level-row b { font-weight: 400; min-width: 6.5em; text-align: right; opacity: .65; font-size: .88em; }
-  .edu { border-left: .35cqw solid var(--red); padding-left: 1.6cqw; }
+  .edu { border-left: .35cqw solid var(--pacc); padding-left: 1.6cqw; }
   .edu strong { display: block; font-size: 1.15em; font-weight: 400; }
   .projects { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr)); gap: 2.4cqw; counter-reset: p; }
-  .projects > li { counter-increment: p; border: 2px solid var(--ink); border-radius: 1.2cqw; padding: 2cqw 2.2cqw 2.2cqw; display: flex; flex-direction: column; gap: 1cqw; background: #fff; box-shadow: .5cqw .5cqw 0 var(--amber); }
-  .projects > li::before { content: "0" counter(p); font-family: var(--display); font-size: clamp(28px, 3.4cqw, 52px); color: var(--red); line-height: 1; }
+  .projects > li { counter-increment: p; border: 2px solid var(--pink); border-radius: 1.2cqw; padding: 2cqw 2.2cqw 2.2cqw; display: flex; flex-direction: column; gap: 1cqw; background: rgba(255,255,255,.05); box-shadow: .5cqw .5cqw 0 var(--pacc2); }
+  .projects > li::before { content: "0" counter(p); font-family: var(--display); font-size: clamp(28px, 3.4cqw, 52px); color: var(--pacc); line-height: 1; }
   .projects h3 { font-family: var(--display); font-weight: 400; font-size: clamp(22px, 2.3cqw, 36px); line-height: 1.1; }
   .projects p { flex: 1; }
-  .projects a { align-self: flex-start; color: var(--ink); font-weight: 400; text-decoration: none; border-bottom: 2px solid var(--red); padding-bottom: 1px; overflow-wrap: anywhere; }
-  .projects a:hover, .projects a:focus-visible { color: var(--red); }
+  .projects a { align-self: flex-start; color: var(--pink); font-weight: 400; text-decoration: none; border-bottom: 2px solid var(--pacc); padding-bottom: 1px; overflow-wrap: anywhere; }
+  .projects a:hover, .projects a:focus-visible { color: var(--pacc); }
   @media (prefers-reduced-motion: reduce) { .info, .info-pane.on { transition: none; animation: none; } }
 
 </style>
@@ -461,10 +468,10 @@
 
   /* ---------- constants (artwork space = 1506 x 906) ---------- */
   const TRACKS = [
-    { src: 'audio/last-surprise.mp3', dur: 235.57, buf: null },
-    { src: 'audio/wake-up.mp3',       dur: 277.84, buf: null },
-    { src: 'audio/fly-me-to-the-moon.mp3', dur: 316, buf: null },
-    { src: 'audio/in-the-pool.mp3', dur: 487.89, buf: null }
+    { src: 'audio/last-surprise.mp3', name: 'Last Surprise', dur: 235.57, buf: null },
+    { src: 'audio/wake-up.mp3',       name: 'Wake Up', dur: 277.84, buf: null },
+    { src: 'audio/fly-me-to-the-moon.mp3', name: 'Fly Me To The Moon', dur: 316, buf: null },
+    { src: 'audio/in-the-pool.mp3', name: 'In The Pool', dur: 487.89, buf: null }
   ];
   /* which songs each disc plays, in order (indexes into TRACKS) */
   const PLAYLISTS = { about: [0, 1], projects: [2], resume: [3] };
@@ -832,7 +839,7 @@
   const ledWrap = document.getElementById('led'), ledCv = document.getElementById('ledCanvas'), lg = ledCv.getContext('2d');
   let ledKey = '';
   function ledMessage() {
-    if (S.src && deck.loaded && !deck.busy) return { text: 'NOW PLAYING - ' + deck.loaded.toUpperCase() + '     ', blink: false, scroll: true };
+    if (S.src && deck.loaded && !deck.busy) return { text: 'NOW PLAYING - ' + (TRACKS[S.list[S.track]] ? TRACKS[S.list[S.track]].name : deck.loaded).toUpperCase() + '     ', blink: false, scroll: true };
     if (deck.busy) return { text: '', blink: false };
     if (deck.loaded) return { text: 'MUST PLAY DISC', blink: true };
     return { text: 'PLAY A DISC', blink: true };
@@ -925,6 +932,7 @@
     if (id === shownDisc) return;
     shownDisc = id;
     panes.forEach(p => p.classList.toggle('on', p.dataset.disc === id));
+    if (id) infoEl.dataset.theme = id;
     infoEl.classList.toggle('show', !!id);
     if (id) slideToScreen();
   }
