@@ -21,6 +21,8 @@
     --red: #f2003c;
     --amber: #e8a915;
     --focus: #1a73e8;
+    --yellow: #eaa726;
+    --band: clamp(64px, 9vh, 100px);
     --display: "Anton", "Impact", "Arial Narrow", sans-serif;
     --body: "Open Sauce", "Segoe UI", system-ui, sans-serif;
     color-scheme: light;
@@ -38,13 +40,13 @@
     font-family: var(--body);
     display: flex; flex-direction: column; align-items: center;
     min-height: 100vh;
-    padding-block: 16px;
+    padding-top: 16px; padding-bottom: 0;
     padding-left: max(16px, env(safe-area-inset-left, 0px));
     padding-right: max(16px, env(safe-area-inset-right, 0px));
     overflow-x: hidden;
   }
 
-  .fold { width: 100%; min-height: calc(100vh - 32px); display: grid; place-items: center; }
+  .fold { position: relative; width: 100%; min-height: calc(100vh - 32px); display: grid; place-items: center; }
   .hero {
     position: relative;
     width: min(100%, calc((100vh - 32px) * 1432 / 811));
@@ -256,7 +258,19 @@
     .intro h2 { font-size: 8.4cqw; white-space: normal; }
     .intro p { font-size: 4.3cqw; margin-top: 3cqw; }
     .turntable { position: relative; left: auto; top: auto; width: 80%; margin-left: 20%; margin-top: 21%; }
+    .fold { display: flex; flex-direction: column; align-items: center; }
+    .led { position: relative; left: auto; bottom: auto; margin-left: calc(50% - 50vw); margin-top: 16px; }
   }
+
+  /* ---------- retro LED screen at the bottom of the home page ---------- */
+  .led {
+    position: absolute; left: calc(50% - 50vw); bottom: -16px; z-index: 5;   /* overlays the empty strip at the bottom of the first screen; nothing else moves */
+    height: var(--band); width: 100vw;
+    background: #191919;
+    border-top: clamp(5px, .9vh, 9px) solid var(--yellow);
+    border-bottom: clamp(5px, .9vh, 9px) solid var(--yellow);
+  }
+  .led canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; image-rendering: pixelated; }
 
   /* ---------- info panel: only exists while a disc is playing ---------- */
   .info {
@@ -267,13 +281,14 @@
   }
   .info.show { grid-template-rows: 1fr; opacity: 1; }
   .info-clip { min-height: 0; overflow: hidden; }
-  .info-pane { display: none; padding: 5cqw 6.2cqw 7cqw; border-top: .25cqw solid var(--ink); font-size: clamp(15px, 1.25cqw, 21px); line-height: 1.55; }
+  .info-pane { display: none; padding: 5cqw 6.2cqw 7cqw; font-size: clamp(15px, 1.25cqw, 21px); line-height: 1.55; }
   .info-pane.on { display: block; animation: infoIn .8s .15s both cubic-bezier(.2,.7,.2,1); }
   @keyframes infoIn { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
   .info-kicker { font-family: var(--display); font-size: clamp(13px, 1.1cqw, 18px); letter-spacing: .14em; text-transform: uppercase; color: var(--red); }
   .info-title { font-family: var(--display); font-weight: 400; font-size: clamp(40px, 6.2cqw, 96px); line-height: 1; margin: .5cqw 0 3cqw; }
   .info-title em { color: var(--red); font-style: italic; }
-  .lead { font-size: clamp(18px, 1.9cqw, 30px); line-height: 1.5; max-width: 52ch; }
+  .lead { font-size: clamp(18px, 1.9cqw, 12px); line-height: 1.5; max-width: 60ch; }
+  .lead + .lead { margin-top: .9em; }
   .facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr)); gap: 2.4cqw 3cqw; margin-top: 4cqw; }
   .fact { border-top: 2px solid var(--ink); padding-top: .9cqw; }
   .fact dt { font-family: var(--display); font-size: clamp(12px, 1cqw, 16px); letter-spacing: .14em; text-transform: uppercase; color: var(--red); margin-bottom: .4cqw; }
@@ -308,7 +323,7 @@
   <section class="intro">
     <h1>Hi, im Zharfan</h1>
     <h2>Computer Science Student<span class="caret" aria-hidden="true">|</span></h2>
-    <p>Computer Science student specializing in Internet of Things (IoT) at BINUS University Bandung with a strong interest in hardware engineering and embedded systems. Passionate about building practical IoT solutions and continuously developing skills in embedded systems and hardware integration.</p>
+    <p>Computer Science student at BINUS University Bandung, focused on building practical software and hardware solutions. I work in C, C++, and Python, with additional experience in Java, SQL, and HTML. My projects range from Arduino-based RFID and barcode systems to databases and web development, and I'm always looking for new technologies to learn and apply. Currently specializing in Internet of Things (IoT).</p>
   </section>
 
   <div class="turntable" id="stage" aria-label="Turntable">
@@ -364,6 +379,7 @@
     <img class="tonearm-holder" src="assets/tonearm-holder.png" alt="">
   </div>
 </main>
+<div class="led" id="led" role="status" aria-live="polite"><canvas id="ledCanvas"></canvas></div>
 </div>
 
 <section class="info" id="info" aria-live="polite">
@@ -372,7 +388,9 @@
     <article class="info-pane" data-disc="about" aria-label="About">
       <p class="info-kicker">Now playing &middot; About</p>
       <h2 class="info-title">About <em>me</em></h2>
-      <p class="lead">Computer Science student specializing in Internet of Things (IoT) at BINUS University Bandung with a strong interest in hardware engineering and embedded systems. Experienced in microcontroller programming, RFID systems, and barcode scanner integration using Arduino-based platforms. Passionate about building practical IoT solutions and continuously developing skills in embedded systems and hardware integration.</p>
+      <p class="lead">I&rsquo;m a Computer Science student at BINUS University Bandung (IoT specialization), expected to graduate in 2028. I&rsquo;m motivated and detail-oriented, and I enjoy turning logical problems into working, practical solutions.</p>
+      <p class="lead">My programming foundation is in C, C++, and Python, supported by Java, SQL, and HTML. I have experience developing basic applications, solving logical problems, and applying core concepts such as algorithms, data structures, and object-oriented programming. I&rsquo;ve put these skills to work in an Arduino-based library system using RFID and barcode scanning, a MySQL database for a LAN service provider, an AI-assisted e-commerce search application, and a landing page for a small business, which has given me hands-on experience across software, databases, web development, and embedded systems.</p>
+      <p class="lead">I learn quickly, work well in a team, and I&rsquo;m eager to keep strengthening my technical skills so I can build efficient, reliable software.</p>
       <dl class="facts">
         <div class="fact"><dt>Location</dt><dd>Bandung, West Java, Indonesia</dd></div>
         <div class="fact"><dt>Studying</dt><dd>BINUS University Bandung<small>Bachelor of Computer Science (IoT) &middot; expected 2028</small></dd></div>
@@ -787,21 +805,128 @@
     Object.values(discs).forEach(d => stepDisc(d, dt));
 
     syncInfo();
+    ledTick();
     drawScreen(dt);
     requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
 
+
+  /* ---------- LED screen: 5x7 pixel font on a dot matrix ---------- */
+  const FONT = {
+    A:'01110,10001,10001,11111,10001,10001,10001', B:'11110,10001,10001,11110,10001,10001,11110',
+    C:'01110,10001,10000,10000,10000,10001,01110', D:'11110,10001,10001,10001,10001,10001,11110',
+    E:'11111,10000,10000,11110,10000,10000,11111', F:'11111,10000,10000,11110,10000,10000,10000',
+    G:'01110,10001,10000,10111,10001,10001,01111', H:'10001,10001,10001,11111,10001,10001,10001',
+    I:'01110,00100,00100,00100,00100,00100,01110', J:'00111,00010,00010,00010,00010,10010,01100',
+    K:'10001,10010,10100,11000,10100,10010,10001', L:'10000,10000,10000,10000,10000,10000,11111',
+    M:'10001,11011,10101,10101,10001,10001,10001', N:'10001,11001,10101,10011,10001,10001,10001',
+    O:'01110,10001,10001,10001,10001,10001,01110', P:'11110,10001,10001,11110,10000,10000,10000',
+    Q:'01110,10001,10001,10001,10101,10010,01101', R:'11110,10001,10001,11110,10100,10010,10001',
+    S:'01111,10000,10000,01110,00001,00001,11110', T:'11111,00100,00100,00100,00100,00100,00100',
+    U:'10001,10001,10001,10001,10001,10001,01110', V:'10001,10001,10001,10001,10001,01010,00100',
+    W:'10001,10001,10001,10101,10101,10101,01010', X:'10001,10001,01010,00100,01010,10001,10001',
+    Y:'10001,10001,01010,00100,00100,00100,00100', Z:'11111,00001,00010,00100,01000,10000,11111',
+    '-':'00000,00000,00000,11111,00000,00000,00000', ' ':'00000,00000,00000,00000,00000,00000,00000'
+  };
+  const ledWrap = document.getElementById('led'), ledCv = document.getElementById('ledCanvas'), lg = ledCv.getContext('2d');
+  let ledKey = '';
+  function ledMessage() {
+    if (S.src && deck.loaded && !deck.busy) return { text: 'NOW PLAYING - ' + deck.loaded.toUpperCase() + '     ', blink: false, scroll: true };
+    if (deck.busy) return { text: '', blink: false };
+    if (deck.loaded) return { text: 'MUST PLAY DISC', blink: true };
+    return { text: 'PLAY A DISC', blink: true };
+  }
+  function ledTick() {
+    const m = ledMessage();
+    const on = !m.blink || Math.floor(performance.now() / 600) % 2 === 0;
+    const r = ledCv.getBoundingClientRect(), dpr = Math.min(window.devicePixelRatio || 1, 3);
+    const STEPS_PER_SEC = 14;                                     // how fast the text crawls left, in LED columns per second
+    const step = m.scroll ? Math.floor(performance.now() / 1000 * STEPS_PER_SEC) : 0;
+    const key = (on ? m.text : '') + '|' + Math.round(r.width) + 'x' + Math.round(r.height) + '|' + dpr + '|' + step;
+    if (key === ledKey) return;
+    ledKey = key;
+    ledWrap.setAttribute('aria-label', m.text ? m.text.toLowerCase() : '');
+    const W = Math.max(1, Math.round(r.width * dpr)), H = Math.max(1, Math.round(r.height * dpr));
+    if (ledCv.width !== W || ledCv.height !== H) { ledCv.width = W; ledCv.height = H; }
+    lg.setTransform(dpr, 0, 0, dpr, 0, 0);
+    lg.clearRect(0, 0, r.width, r.height);
+    const cs = Math.max(4, Math.round(r.height / 16));             // one LED cell in css px
+    const cols = Math.floor(r.width / cs), rows = Math.floor(r.height / cs);
+    const txt = on ? m.text : '';
+    let scale = Math.max(1, Math.floor((rows - 2) / 7));
+    const full = m.text.length * 6 - 1;
+    if (!m.scroll) while (scale > 1 && full * scale > cols - 4) scale--;
+    const lit = new Set();
+    if (txt) {
+      const y0 = Math.floor((rows - 7 * scale) / 2);
+      const period = m.text.length * 6 * scale;                      // one full copy of the text, in columns
+      const tw = full * scale;
+      const first = m.scroll ? -(step % period) : Math.floor((cols - tw) / 2);
+      for (let start = first; start < cols; start += period) {
+        let cx = start;
+        for (const ch of txt) {
+          if (cx >= cols) break;
+          if (cx + 5 * scale > 0) {
+            const rowsStr = (FONT[ch] || FONT[' ']).split(',');
+            for (let ry = 0; ry < 7; ry++) for (let rx = 0; rx < 5; rx++) if (rowsStr[ry][rx] === '1')
+              for (let sy = 0; sy < scale; sy++) for (let sx = 0; sx < scale; sx++) {
+                const px = cx + rx * scale + sx;
+                if (px >= 0 && px < cols) lit.add((y0 + ry * scale + sy) * 10000 + px);
+              }
+          }
+          cx += 6 * scale;
+        }
+        if (!m.scroll) break;
+      }
+    }
+    const offX = (r.width - cols * cs) / 2, offY = (r.height - rows * cs) / 2;
+    for (let y = 0; y < rows; y++) for (let x = 0; x < cols; x++) {
+      const px = offX + x * cs + cs / 2, py = offY + y * cs + cs / 2;
+      if (lit.has(y * 10000 + x)) {
+        lg.shadowColor = 'rgba(255,176,40,.9)'; lg.shadowBlur = cs * 0.9;
+        lg.fillStyle = '#ffb82e';
+        lg.fillRect(px - cs * 0.4, py - cs * 0.4, cs * 0.8, cs * 0.8);
+        lg.shadowBlur = 0;
+      } else {
+        lg.fillStyle = 'rgba(255,184,46,.11)';
+        lg.fillRect(px - cs * 0.17, py - cs * 0.17, cs * 0.34, cs * 0.34);
+      }
+    }
+  }
+
   /* ---------- info panel: visible only while a disc is actually playing ---------- */
   const infoEl = document.getElementById('info');
   const panes = Array.from(infoEl.querySelectorAll('.info-pane'));
-  let shownDisc = null;
+  let shownDisc = null, slideRaf = 0, slideStop = null;
+  /* when a disc starts playing, glide the page down so the LED screen sits at the top of the window and the info is in view */
+  function slideToScreen() {
+    cancelAnimationFrame(slideRaf);
+    if (slideStop) slideStop();
+    const ledEl = document.getElementById('led');
+    const reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const y0 = window.scrollY, t0 = performance.now() + 350, DUR = 1400;
+    let stopped = false;
+    const evs = ['wheel', 'touchstart', 'keydown', 'mousedown'];
+    slideStop = () => { stopped = true; evs.forEach(e => window.removeEventListener(e, slideStop)); slideStop = null; };
+    evs.forEach(e => window.addEventListener(e, slideStop, { passive: true }));
+    const tick = (now) => {
+      if (stopped) return;
+      const p = Math.min(1, Math.max(0, (now - t0) / DUR));
+      const target = ledEl.getBoundingClientRect().top + window.scrollY;
+      const e = reduce ? 1 : (p < .5 ? 2 * p * p : 1 - Math.pow(-2 * p + 2, 2) / 2);
+      if (p > 0) window.scrollTo(0, y0 + (target - y0) * e);
+      if (p < 1) slideRaf = requestAnimationFrame(tick); else if (slideStop) slideStop();
+    };
+    slideRaf = requestAnimationFrame(tick);
+  }
   function syncInfo() {
     const id = (S.src && deck.loaded && !deck.busy) ? deck.loaded : null;
     if (id === shownDisc) return;
     shownDisc = id;
     panes.forEach(p => p.classList.toggle('on', p.dataset.disc === id));
     infoEl.classList.toggle('show', !!id);
+    if (id) slideToScreen();
   }
 })();
 </script>
