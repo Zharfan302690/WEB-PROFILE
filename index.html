@@ -352,9 +352,9 @@
   .hstage { position: absolute; left: 50%; top: 50%; width: calc(1366 * var(--hu)); height: calc(768 * var(--hu)); transform: translate(-50%, -50%); }
   .hstage > * { position: absolute; }
 
-  .hdisc { left: calc(276 * var(--hu)); top: 0; width: calc(768 * var(--hu)); height: calc(768 * var(--hu)); z-index: 1; filter: drop-shadow(0 calc(12 * var(--hu)) calc(26 * var(--hu)) rgba(0,0,0,.35)); will-change: transform; }
+  .hdisc { left: calc(329 * var(--hu)); top: calc(48 * var(--hu)); width: calc(672 * var(--hu)); height: calc(672 * var(--hu)); z-index: 1; filter: drop-shadow(0 calc(10 * var(--hu)) calc(22 * var(--hu)) rgba(0,0,0,.35)); will-change: transform; }
   /* idle motion: the disc rocks back and forth around its own centre, easing at both ends so the loop never jumps */
-  .hfloat { width: 100%; height: 100%; transform-origin: 50% 50%; animation: discRock 10s ease-in-out infinite alternate; will-change: transform; }
+  .hfloat { position: relative; width: 100%; height: 100%; transform-origin: 50% 50%; animation: discRock 10s ease-in-out infinite alternate; will-change: transform; }
   @keyframes discRock { from { transform: rotate(-3deg); } to { transform: rotate(3deg); } }
   @media (prefers-reduced-motion: reduce) { .hfloat { animation: none; } }
   .hspin { width: 100%; height: 100%; position: relative; transform: rotate(90deg); will-change: transform; }
@@ -363,30 +363,31 @@
 
   .hpanelwrap { left: 0; top: 0; width: 0; height: 0; z-index: 2; }
   .hpanel {
-    position: absolute; left: -100vw; top: -60vh; width: calc(100vw + calc(680 * var(--hu)) + 16.25vh); height: calc(calc(768 * var(--hu)) + 120vh);
-    background: #000; clip-path: polygon(0 0, 100% 0, calc(100% - calc(208 * var(--hu)) - 65vh * .5) 100%, 0 100%);
-    filter: none;
+    position: absolute; left: -100vw; top: -60vh; width: calc(100vw + calc(840 * var(--hu)) + 35.55vh); height: calc(calc(768 * var(--hu)) + 120vh);
+    background: #000; clip-path: polygon(0 0, 100% 0, calc(100% - calc(455 * var(--hu)) - 71.1vh) 100%, 0 100%);
   }
   .hpanelwrap { filter: drop-shadow(calc(8 * var(--hu)) 0 calc(22 * var(--hu)) rgba(0,0,0,.5)); }
 
-  .hcopy { left: calc(77 * var(--hu)); top: calc(72 * var(--hu)); width: calc(540 * var(--hu)); z-index: 3; }
+  .hcopy { left: calc(77 * var(--hu)); top: calc(80 * var(--hu)); width: calc(540 * var(--hu)); z-index: 3; }
   .hcopy h1 { font-family: var(--display); font-weight: 400; font-size: calc(95.5 * var(--hu)); line-height: 1; white-space: nowrap; color: #fff; }
-  .hcopy h2 { font-family: var(--display); font-weight: 400; font-style: italic; font-size: calc(45.5 * var(--hu)); line-height: 1.05; color: var(--acc, #e9281a); white-space: nowrap; margin-top: calc(22 * var(--hu)); transition: color .35s; }
-  .hcopy h2 .caret { color: var(--acc, #e9281a); transition: color .35s; }
+  .hcopy h2 { font-family: var(--display); font-weight: 400; font-style: italic; font-size: calc(45.5 * var(--hu)); line-height: 1.05; color: var(--hl, #f50137); white-space: nowrap; margin-top: calc(22 * var(--hu)); transition: color .35s; }
+  .hcopy h2 .caret { color: var(--hl, #f50137); transition: color .35s; }
   .hcopy p { font-family: var(--body); font-size: calc(15.9 * var(--hu)); line-height: 1.38; width: calc(492 * var(--hu)); margin-top: calc(6 * var(--hu)); color: #fff; }
 
+  /* flat on the left, cut along the same slant as the black panel; the white shadow is drawn around the cut shape */
   .hbtn {
-    position: absolute; z-index: 4; height: calc(92 * var(--hu)); width: calc(380 * var(--hu)); border: 0; cursor: pointer;
-    background: var(--acc, #e9281a); color: #fff; transform: skewX(-27deg); transform-origin: 0 100%;
-    box-shadow: calc(7 * var(--hu)) calc(7 * var(--hu)) 0 #fff; transition: background-color .3s, translate .2s cubic-bezier(.2,.8,.2,1), box-shadow .2s;
+    position: absolute; z-index: 4; height: calc(92 * var(--hu)); left: calc(77 * var(--hu)); border: 0; background: none; cursor: pointer; color: #fff; isolation: isolate;
+    filter: drop-shadow(calc(7 * var(--hu)) calc(7 * var(--hu)) 0 #fff); transition: translate .2s cubic-bezier(.2,.8,.2,1), filter .2s;
   }
-  .hbtn span { display: block; transform: skewX(27deg); font-family: var(--display); font-size: calc(42.5 * var(--hu)); line-height: 1; letter-spacing: .01em; padding-top: .06em; }
-  .hbtn:hover, .hbtn:focus-visible { translate: calc(10 * var(--hu)) calc(-3 * var(--hu)); box-shadow: calc(11 * var(--hu)) calc(11 * var(--hu)) 0 #fff; outline: none; }
-  .hbtn:active { translate: calc(4 * var(--hu)) 0; box-shadow: calc(4 * var(--hu)) calc(4 * var(--hu)) 0 #fff; }
+  .hbtn::before { content: ""; position: absolute; inset: 0; z-index: -1; background: var(--acc, #e9281a); transition: background-color .3s;
+    clip-path: polygon(0 0, 100% 0, calc(100% - calc(54.5 * var(--hu))) 100%, 0 100%); }
+  .hbtn span { display: block; font-family: var(--display); font-size: calc(42.5 * var(--hu)); line-height: 1; letter-spacing: .01em; padding: .06em calc(40 * var(--hu)) 0 0; }
+  .hbtn:hover, .hbtn:focus-visible { translate: calc(10 * var(--hu)) calc(-3 * var(--hu)); filter: drop-shadow(calc(11 * var(--hu)) calc(11 * var(--hu)) 0 #fff); outline: none; }
+  .hbtn:active { translate: calc(4 * var(--hu)) 0; filter: drop-shadow(calc(4 * var(--hu)) calc(4 * var(--hu)) 0 #fff); }
   .hbtn:focus-visible { outline: 3px solid #fff; outline-offset: 5px; }
-  .hbtn.b1 { left: calc(108 * var(--hu)); top: calc(428 * var(--hu)); }
-  .hbtn.b2 { left: calc(78 * var(--hu));  top: calc(534 * var(--hu)); }
-  .hbtn.b3 { left: calc(48 * var(--hu));  top: calc(640 * var(--hu)); }
+  .hbtn.b1 { top: calc(428 * var(--hu)); width: calc(526.5 * var(--hu)); }
+  .hbtn.b2 { top: calc(534 * var(--hu)); width: calc(463.7 * var(--hu)); }
+  .hbtn.b3 { top: calc(640 * var(--hu)); width: calc(400.9 * var(--hu)); }
   .hbtns { inset: 0; pointer-events: none; z-index: 4; }
   .hbtns .hbtn { pointer-events: auto; }
 
@@ -409,7 +410,9 @@
   @media (prefers-reduced-motion: reduce) { .gate span { animation: none; color: #fff; } }
   .home.pre .hcopy, .home.pre .hbtn { animation: none; opacity: 0; }
 
-  /* white level bars, bottom right of the start page */
+  /* circular visualizer sitting on the disc's inner ring, around the label */
+  .hring { position: absolute; left: 50%; top: 50%; width: 53.57%; aspect-ratio: 1; transform: translate(-50%, -50%); z-index: 2; pointer-events: none; }
+  /* (old) white level bars, bottom right of the start page */
   .hviz { position: absolute; right: max(18px, 2.6vw); bottom: max(16px, 4vh); width: clamp(190px, 25vw, 400px); height: clamp(64px, 15vh, 140px); z-index: 5; pointer-events: none; }
   /* fresh-start entrance */
   .hcopy, .hbtn { animation: homeIn .9s .1s both cubic-bezier(.2,.7,.2,1); }
@@ -428,9 +431,10 @@
     .hcopy h1 { font-size: 14.5vw; } .hcopy h2 { font-size: 7vw; }
     .hcopy p { font-size: 3.7vw; width: auto; margin-top: 2vw; }
     .hbtns { inset: auto; margin-top: 11vw; display: flex; flex-direction: column; gap: 4.5vw; }
-    .hbtn, .hbtn.b1, .hbtn.b2, .hbtn.b3 { position: relative; left: auto; top: auto; width: 72vw; height: 15vw; }
-    .hbtn.b2 { margin-left: -4vw; } .hbtn.b3 { margin-left: -8vw; }
-    .hbtn span { font-size: 8vw; }
+    .hbtn, .hbtn.b1, .hbtn.b2, .hbtn.b3 { position: relative; left: auto; top: auto; width: 80vw; height: 15vw; }
+    .hbtn.b2 { width: 70vw; } .hbtn.b3 { width: 60vw; }
+    .hbtn::before { clip-path: polygon(0 0, 100% 0, calc(100% - 8vw) 100%, 0 100%); }
+    .hbtn span { font-size: 8vw; padding-right: 8vw; }
   }
 
   /* ---------- the splash: slanted colour slabs sweep sideways across the page ---------- */
@@ -471,9 +475,8 @@
 <button class="gate" id="gate" type="button" aria-label="Click to start"><span>CLICK TO START</span></button>
 <div class="home pre" id="home">
   <div class="weave" aria-hidden="true"></div>
-  <canvas class="hviz" id="hviz" aria-hidden="true"></canvas>
   <div class="hstage">
-    <div class="hdisc" id="hdisc" aria-hidden="true"><div class="hfloat"><div class="hspin" id="hspin">
+    <div class="hdisc" id="hdisc" aria-hidden="true"><div class="hfloat"><canvas class="hring" id="hring"></canvas><div class="hspin" id="hspin">
       <img class="on" data-disc="about" src="assets/disc-about.png" alt="">
       <img data-disc="resume" src="assets/disc-resume.png" alt="">
       <img data-disc="projects" src="assets/disc-projects.png" alt="">
@@ -943,31 +946,31 @@
   }
 
   /* ---------- start-page visualizer: solid white bars ---------- */
-  const hvizEl = document.getElementById('hviz'), hg = hvizEl.getContext('2d');
+  const hvizEl = document.getElementById('hring'), hg = hvizEl.getContext('2d');
   const hbars = new Float32Array(NB);
-  const hexRGB = h => [1, 3, 5].map(i => parseInt(h.substr(i, 2), 16));
-  let vizCol = null;                       // current bar colour, eases toward the colour of the disc on screen
   function drawHomeViz(dt) {
     if (document.body.classList.contains('in-deck')) return;
     const r = hvizEl.getBoundingClientRect(), dpr = Math.min(window.devicePixelRatio || 1, 3);
-    const w = Math.max(1, Math.round(r.width * dpr)), h = Math.max(1, Math.round(r.height * dpr));
-    if (hvizEl.width !== w || hvizEl.height !== h) { hvizEl.width = w; hvizEl.height = h; }
+    const px = Math.max(1, Math.round(r.width * dpr));
+    if (hvizEl.width !== px) { hvizEl.width = px; hvizEl.height = px; }
+    const S = r.width, c = S / 2, unit = S / 360;                 // 1 unit = one design pixel of the 360 x 360 canvas
     hg.setTransform(dpr, 0, 0, dpr, 0, 0);
-    hg.clearRect(0, 0, r.width, r.height);
+    hg.clearRect(0, 0, S, S);
     analyser.getByteFrequencyData(freqData);
-    const pitch = r.width / NB, bw = pitch * 0.68;
-    const tgt = [255, 255, 255];                                  // the bars stay white
-    if (!vizCol) vizCol = tgt.slice();
-    const k = 1 - Math.exp(-dt / 0.25);
-    for (let c = 0; c < 3; c++) vizCol[c] += (tgt[c] - vizCol[c]) * k;
-    hg.fillStyle = 'rgb(' + vizCol.map(Math.round).join(',') + ')';
     for (let i = 0; i < NB; i++) {
       let m = 0;
       for (let b = edges[i]; b < edges[i + 1] && b < freqData.length; b++) if (freqData[b] > m) m = freqData[b];
       const v = Math.min(1, Math.pow(m / 255, 1.5) * (0.8 + 0.45 * i / NB));
       hbars[i] = v > hbars[i] ? v : Math.max(v, hbars[i] - dt * 1.6);
-      const bh = Math.max(3, hbars[i] * r.height);
-      hg.fillRect(i * pitch + (pitch - bw) / 2, r.height - bh, bw, bh);
+    }
+    const N = NB * 2, r0 = 124 * unit, maxLen = 38 * unit, bw = 2 * Math.PI * r0 / N * 0.62;
+    hg.fillStyle = '#fff';
+    for (let k = 0; k < N; k++) {                                 // starts at the top, runs clockwise; the left half mirrors the right
+      const i = k < NB ? k : N - 1 - k;
+      const len = Math.max(3 * unit, hbars[i] * maxLen), a = -Math.PI / 2 + (k + 0.5) * 2 * Math.PI / N;
+      hg.save(); hg.translate(c, c); hg.rotate(a + Math.PI / 2);
+      hg.fillRect(-bw / 2, -(r0 + len), bw, len);
+      hg.restore();
     }
   }
 
@@ -1139,9 +1142,9 @@
 
   /* =====================  start page, splash transition, auto-play  ===================== */
   const THEMES = {
-    about:    { stage: '#f50137', acc: '#e9281a' },
-    resume:   { stage: '#1274e0', acc: '#0b5cc0' },
-    projects: { stage: '#ff3d8f', acc: '#d81b6c' }
+    about:    { stage: '#e9281a', acc: '#e9281a', hl: '#f50137' },
+    resume:   { stage: '#1274e0', acc: '#0b5cc0', hl: '#2f8cf5' },
+    projects: { stage: '#ff3d8f', acc: '#d81b6c', hl: '#ff3d8f' }
   };
   const rootStyle = document.documentElement.style;
   const homeEl = $('home'), deckEl = $('deck'), wipeEl = $('wipe'), backBtn = $('back');
@@ -1180,7 +1183,7 @@
     }
     hspin.querySelectorAll('img').forEach(i => i.classList.toggle('on', i.dataset.disc === id));
     shownHome = id;
-    homeEl.style.setProperty('--acc', THEMES[id].acc);
+    homeEl.style.setProperty('--acc', THEMES[id].acc); homeEl.style.setProperty('--hl', THEMES[id].hl);
     if (!first) rootStyle.setProperty('--stage', THEMES[id].stage);
     hdisc.style.visibility = 'visible';
     startPreview();                               // the music starts as the disc starts rolling out
@@ -1194,7 +1197,7 @@
     if (id === homeDisc && discArrived) return;
     homeDisc = id;
     if (discArrived) showDisc(id, false);
-    else homeEl.style.setProperty('--acc', THEMES[id].acc);
+    else homeEl.style.setProperty('--acc', THEMES[id].acc); homeEl.style.setProperty('--hl', THEMES[id].hl);
   }
   document.querySelectorAll('.hbtn').forEach(b => {
     b.addEventListener('mouseenter', () => setHomeDisc(b.dataset.disc));
@@ -1202,7 +1205,7 @@
     b.addEventListener('click', () => go(b.dataset.disc));
   });
   function rollOut() { placeDisc(hiddenX(), hdisc.offsetWidth / 2); showDisc(homeDisc, true); }
-  homeEl.style.setProperty('--acc', THEMES.about.acc);
+  homeEl.style.setProperty('--acc', THEMES.about.acc); homeEl.style.setProperty('--hl', THEMES.about.hl);
   hdisc.style.visibility = 'hidden';
   const gateEl = $('gate');
   let entered = false;
