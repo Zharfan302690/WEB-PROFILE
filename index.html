@@ -354,11 +354,11 @@
 
   .hdisc { left: calc(329 * var(--hu)); top: calc(48 * var(--hu)); width: calc(672 * var(--hu)); height: calc(672 * var(--hu)); z-index: 1; filter: drop-shadow(0 calc(10 * var(--hu)) calc(22 * var(--hu)) rgba(0,0,0,.35)); will-change: transform; }
   /* idle motion: the disc rocks back and forth around its own centre, easing at both ends so the loop never jumps */
-  .hfloat { position: relative; width: 100%; height: 100%; transform-origin: 50% 50%; animation: discRock 10s ease-in-out infinite alternate; will-change: transform; }
-  @keyframes discRock { from { transform: rotate(-3deg); } to { transform: rotate(3deg); } }
-  @media (prefers-reduced-motion: reduce) { .hfloat { animation: none; } }
+  .hfloat { position: relative; width: 100%; height: 100%; }
+  @keyframes discSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .hspin img { animation: none !important; } }
   .hspin { width: 100%; height: 100%; position: relative; transform: rotate(90deg); will-change: transform; }
-  .hspin img { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .35s ease; }
+  .hspin img { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .35s ease; transform-origin: 50% 50%; animation: discSpin 12s linear infinite; will-change: transform; }
   .hspin img.on { opacity: 1; }
 
   .hpanelwrap { left: 0; top: 0; width: 0; height: 0; z-index: 2; }
